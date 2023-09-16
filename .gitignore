@@ -37,3 +37,4 @@ lerna-debug.log*
 # Security
 .development.env
 .production.env
+.env
