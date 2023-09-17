@@ -12,10 +12,10 @@ export class TagsService {
 	) {}
 
 	async getAllTags() {
-		return await firstValueFrom(this.meetupsMicroserviceClient.send('/tags/getAll', {}));
+		return await firstValueFrom(this.meetupsMicroserviceClient.send('tags/getAll', {}));
 	}
 
 	async createTag(dto: CreateTagDto) {
-		return await firstValueFrom(this.meetupsMicroserviceClient.send('/tags/create', dto));
+		return await firstValueFrom(this.meetupsMicroserviceClient.send('tags/create', dto));
 	}
 }

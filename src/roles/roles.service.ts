@@ -14,7 +14,7 @@ export class RolesService {
 	}
 
 	async getRoleByValue(value: string) {
-		const role = await firstValueFrom(this.authMicroserviceClient.send('roles/create', { value }));
+		const role = await firstValueFrom(this.authMicroserviceClient.send('roles/getByValue', { value }));
 
 		if (!role) throw new NotFoundException();
 

@@ -23,31 +23,31 @@ export class MeetupsService {
 		sortBy: MeetupQueryValueType = 'ascending',
 	) {
 		return await firstValueFrom(
-			this.meetupsMicroserviceClient.send('/meetups/getAll', { name, take, skip, sortBy }),
+			this.meetupsMicroserviceClient.send('meetups/getAll', { name, take, skip, sortBy }),
 		);
 	}
 
 	async getMeetupById(id: number) {
-		return await firstValueFrom(this.meetupsMicroserviceClient.send('/meetups/getById', { id }));
+		return await firstValueFrom(this.meetupsMicroserviceClient.send('meetups/getById', { id }));
 	}
 
 	async createMeetup(dto: CreateMeetupDto) {
-		return await firstValueFrom(this.meetupsMicroserviceClient.send('/meetups/create', dto));
+		return await firstValueFrom(this.meetupsMicroserviceClient.send('meetups/create', dto));
 	}
 
 	async updateMeetupById(id: number, dto: UpdateMeetupDto) {
-		return await firstValueFrom(this.meetupsMicroserviceClient.send('/meetups/updateById', { id, dto }));
+		return await firstValueFrom(this.meetupsMicroserviceClient.send('meetups/updateById', { id, dto }));
 	}
 
 	async deleteMeetupById(id: number) {
-		return await firstValueFrom(this.meetupsMicroserviceClient.send('/meetups/deleteById', { id }));
+		return await firstValueFrom(this.meetupsMicroserviceClient.send('meetups/deleteById', { id }));
 	}
 
 	async addTag(dto: AddTagDto) {
-		return await firstValueFrom(this.meetupsMicroserviceClient.send('/meetups/addTag', dto));
+		return await firstValueFrom(this.meetupsMicroserviceClient.send('meetups/addTag', dto));
 	}
 
 	async sign(user: User, dto: SignUserToMeetupDto) {
-		return await firstValueFrom(this.meetupsMicroserviceClient.send('/meetups/sign', { user, dto }));
+		return await firstValueFrom(this.meetupsMicroserviceClient.send('meetups/sign', { user, dto }));
 	}
 }

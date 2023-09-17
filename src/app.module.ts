@@ -74,7 +74,6 @@ import type { RabbitMQConfig } from './config/rabbitmq.config';
 		}),
 		ConfigModule.forRoot({
 			isGlobal: true,
-			envFilePath: `.env`,
 			load: [jwtConfigRegister, appConfigRegister, rabbitmqConfigRegister],
 		}),
 		UsersModule,
