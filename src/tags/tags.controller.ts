@@ -8,10 +8,13 @@ import { jwtSwaggerAuthApiHeader } from 'src/auth/constants/jwt-swagger-auth-hea
 
 import { Tag } from './models/tags.model';
 import { CreateTagDto } from './dto/create-tag.dto';
+import { TagsService } from './tags.service';
 
 @ApiTags('Tags')
 @Controller('tags')
 export class TagsController {
+	constructor(private readonly tagsService: TagsService) {}
+
 	@ApiOperation({ summary: 'Create tag for meetup' })
 	@ApiResponse({ status: 201, type: Tag })
 	@ApiHeader(jwtSwaggerAuthApiHeader)
@@ -19,10 +22,14 @@ export class TagsController {
 	@UseGuards(RolesGuard)
 	@UseGuards(JwtAuthenticationGuard)
 	@Post('create')
-	async create(@Body() dto: CreateTagDto) {}
+	async create(@Body() dto: CreateTagDto) {
+		return await this.tagsService.createTag(dto);
+	}
 
 	@ApiOperation({ summary: 'Get all meetups tags' })
 	@ApiResponse({ status: 200, type: [Tag] })
 	@Get()
-	async getAll() {}
+	async getAll() {
+		return await this.tagsService.getAllTags();
+	}
 }

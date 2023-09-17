@@ -14,10 +14,13 @@ import { SignUserToMeetupDto } from './dto/sign-user-to-meetup.dto';
 import { AddTagDto } from './dto/add-tag.dto';
 import { UpdateMeetupDto } from './dto/update-meetup.dto';
 import { CreateMeetupDto } from './dto/create-meetup.dto';
+import { MeetupsService } from './meetups.service';
 
 @ApiTags('Meetups')
 @Controller('meetups')
 export class MeetupsController {
+	constructor(private readonly meetupsService: MeetupsService) {}
+
 	@ApiOperation({ summary: 'Get all meetups' })
 	@ApiResponse({ status: 200, type: [Meetup] })
 	@ApiHeader(jwtSwaggerAuthApiHeader)
@@ -28,14 +31,18 @@ export class MeetupsController {
 		@Query('take') take: number,
 		@Query('skip') skip: number,
 		@Query('sort_by') sortBy: MeetupQueryValueType,
-	) {}
+	) {
+		return await this.meetupsService.getAllMeetups(name, take, skip, sortBy);
+	}
 
 	@ApiOperation({ summary: 'Get meetup by id' })
 	@ApiResponse({ status: 200, type: Meetup })
 	@ApiHeader(jwtSwaggerAuthApiHeader)
 	@UseGuards(JwtAuthenticationGuard)
 	@Get(':id')
-	async getById(@Param('id', new ParseIntPipe()) id: number) {}
+	async getById(@Param('id', new ParseIntPipe()) id: number) {
+		return await this.meetupsService.getMeetupById(id);
+	}
 
 	@ApiOperation({ summary: 'Create meetup' })
 	@ApiResponse({ status: 201, type: Meetup })
@@ -44,7 +51,9 @@ export class MeetupsController {
 	@UseGuards(RolesGuard)
 	@UseGuards(JwtAuthenticationGuard)
 	@Post('create')
-	async create(@Body() dto: CreateMeetupDto) {}
+	async create(@Body() dto: CreateMeetupDto) {
+		return await this.meetupsService.createMeetup(dto);
+	}
 
 	@ApiOperation({ summary: 'Update meetup by id' })
 	@ApiResponse({ status: 200, type: Meetup })
@@ -53,7 +62,9 @@ export class MeetupsController {
 	@UseGuards(RolesGuard)
 	@UseGuards(JwtAuthenticationGuard)
 	@Patch(':id')
-	async updateById(@Param('id', new ParseIntPipe()) id: number, @Body() dto: UpdateMeetupDto) {}
+	async updateById(@Param('id', new ParseIntPipe()) id: number, @Body() dto: UpdateMeetupDto) {
+		return await this.meetupsService.updateMeetupById(id, dto);
+	}
 
 	@ApiOperation({ summary: 'Delete meetup by id' })
 	@ApiResponse({ status: 200 })
@@ -62,7 +73,9 @@ export class MeetupsController {
 	@UseGuards(RolesGuard)
 	@UseGuards(JwtAuthenticationGuard)
 	@Delete(':id')
-	async deleteById(@Param('id', new ParseIntPipe()) id: number) {}
+	async deleteById(@Param('id', new ParseIntPipe()) id: number) {
+		return await this.meetupsService.deleteMeetupById(id);
+	}
 
 	@ApiOperation({ summary: 'Add tag to meetup' })
 	@ApiResponse({ status: 200, type: Meetup })
@@ -71,12 +84,16 @@ export class MeetupsController {
 	@UseGuards(RolesGuard)
 	@UseGuards(JwtAuthenticationGuard)
 	@Patch('addTag')
-	async addTag(@Body() dto: AddTagDto) {}
+	async addTag(@Body() dto: AddTagDto) {
+		return await this.meetupsService.addTag(dto);
+	}
 
 	@ApiOperation({ summary: 'Sign user to meetup' })
 	@ApiResponse({ status: 200, type: Meetup })
 	@ApiHeader(jwtSwaggerAuthApiHeader)
 	@UseGuards(JwtAuthenticationGuard)
 	@Patch('sign')
-	async sign(@UserParam() user: User, @Body() dto: SignUserToMeetupDto) {}
+	async sign(@UserParam() user: User, @Body() dto: SignUserToMeetupDto) {
+		return await this.meetupsService.sign(user, dto);
+	}
 }

@@ -6,10 +6,11 @@ import { UsersModule } from 'src/users/users.module';
 import { JwtAuthController } from './jwt-auth.controller';
 import { JwtStrategy } from './strategies/jwt-strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh-strategy';
+import { JwtAuthService } from './jwt-auth.service';
 
 @Module({
 	controllers: [JwtAuthController],
-	providers: [JwtStrategy, JwtRefreshStrategy],
+	providers: [JwtStrategy, JwtRefreshStrategy, JwtAuthService],
 	imports: [JwtModule.register({}), PassportModule.register({}), UsersModule],
 	exports: [JwtModule],
 })
