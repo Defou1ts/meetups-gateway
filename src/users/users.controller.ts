@@ -6,7 +6,6 @@ import { RolesGuard } from 'src/users/guards/roles-guard';
 import { jwtSwaggerAuthApiHeader } from 'src/auth/constants/jwt-swagger-auth-header';
 
 import { CreateUserDto } from './dto/create-user-dto';
-import { User } from './models/users.model';
 import { SetRoleDto } from './dto/set-role.dto';
 import { UserRoles } from './constants/user-roles';
 import { UsersService } from './users.service';
@@ -17,7 +16,7 @@ export class UsersController {
 	constructor(private readonly userService: UsersService) {}
 
 	@ApiOperation({ summary: 'Create user' })
-	@ApiResponse({ status: 201, type: User })
+	@ApiResponse({ status: 201 })
 	@ApiHeader(jwtSwaggerAuthApiHeader)
 	@RequiredRole(UserRoles.ORGANIZER)
 	@UseGuards(RolesGuard)
@@ -28,7 +27,7 @@ export class UsersController {
 	}
 
 	@ApiOperation({ summary: 'Get all users' })
-	@ApiResponse({ status: 200, type: [User] })
+	@ApiResponse({ status: 200 })
 	@Get()
 	async getAll() {
 		return await this.userService.getAllUsers();

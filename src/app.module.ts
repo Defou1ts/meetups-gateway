@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientsModule } from '@nestjs/microservices';
 
 import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
@@ -11,67 +11,18 @@ import { jwtConfigRegister } from './config/jwt.config';
 import { appConfigRegister } from './config/app.config';
 import { rabbitmqConfigRegister } from './config/rabbitmq.config';
 import { MICROSERVICES_TYPES } from './services.types';
-
-import type { RabbitMQConfig } from './config/rabbitmq.config';
+import { getClientsModuleRabbitMqProvider } from './helpers/getClientsModuleRabbitMqConnection';
 
 @Module({
 	imports: [
 		ClientsModule.registerAsync({
 			isGlobal: true,
 			clients: [
-				{
-					name: MICROSERVICES_TYPES.AUTH_MICROSERVICE,
-					useFactory: ({ username, password, hostname, port }: RabbitMQConfig) => ({
-						name: MICROSERVICES_TYPES.AUTH_MICROSERVICE,
-						transport: Transport.RMQ,
-						options: {
-							urls: [
-								{
-									protocol: 'amqp',
-									username,
-									password,
-									hostname,
-									port,
-								},
-							],
-							queue: 'auth_queue',
-							queueOptions: {
-								durable: false,
-							},
-						},
-					}),
-					inject: [rabbitmqConfigRegister.KEY],
-				},
+				getClientsModuleRabbitMqProvider(MICROSERVICES_TYPES.AUTH_MICROSERVICE, 'auth_queue'),
+				getClientsModuleRabbitMqProvider(MICROSERVICES_TYPES.MEETUPS_MICROSERVICE, 'meetups_queue'),
 			],
 		}),
-		ClientsModule.registerAsync({
-			isGlobal: true,
-			clients: [
-				{
-					name: MICROSERVICES_TYPES.MEETUPS_MICROSERVICE,
-					useFactory: ({ username, password, hostname, port }: RabbitMQConfig) => ({
-						name: MICROSERVICES_TYPES.MEETUPS_MICROSERVICE,
-						transport: Transport.RMQ,
-						options: {
-							urls: [
-								{
-									protocol: 'amqp',
-									username,
-									password,
-									hostname,
-									port,
-								},
-							],
-							queue: 'meetups_queue',
-							queueOptions: {
-								durable: false,
-							},
-						},
-					}),
-					inject: [rabbitmqConfigRegister.KEY],
-				},
-			],
-		}),
+
 		ConfigModule.forRoot({
 			isGlobal: true,
 			load: [jwtConfigRegister, appConfigRegister, rabbitmqConfigRegister],

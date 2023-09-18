@@ -6,7 +6,6 @@ import { UserRoles } from 'src/users/constants/user-roles';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { jwtSwaggerAuthApiHeader } from 'src/auth/constants/jwt-swagger-auth-header';
 
-import { Tag } from './models/tags.model';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { TagsService } from './tags.service';
 
@@ -16,7 +15,7 @@ export class TagsController {
 	constructor(private readonly tagsService: TagsService) {}
 
 	@ApiOperation({ summary: 'Create tag for meetup' })
-	@ApiResponse({ status: 201, type: Tag })
+	@ApiResponse({ status: 201 })
 	@ApiHeader(jwtSwaggerAuthApiHeader)
 	@RequiredRole(UserRoles.ORGANIZER)
 	@UseGuards(RolesGuard)
@@ -27,7 +26,7 @@ export class TagsController {
 	}
 
 	@ApiOperation({ summary: 'Get all meetups tags' })
-	@ApiResponse({ status: 200, type: [Tag] })
+	@ApiResponse({ status: 200 })
 	@Get()
 	async getAll() {
 		return await this.tagsService.getAllTags();

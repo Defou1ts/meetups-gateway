@@ -6,7 +6,6 @@ import { UserRoles } from 'src/users/constants/user-roles';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { jwtSwaggerAuthApiHeader } from 'src/auth/constants/jwt-swagger-auth-header';
 
-import { Role } from './models/roles.model';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { RolesService } from './roles.service';
 
@@ -16,7 +15,7 @@ export class RolesController {
 	constructor(private readonly roleSerive: RolesService) {}
 
 	@ApiOperation({ summary: 'Create user role' })
-	@ApiResponse({ status: 201, type: Role })
+	@ApiResponse({ status: 201 })
 	@ApiHeader(jwtSwaggerAuthApiHeader)
 	@RequiredRole(UserRoles.ORGANIZER)
 	@UseGuards(RolesGuard)
@@ -27,7 +26,7 @@ export class RolesController {
 	}
 
 	@ApiOperation({ summary: 'Get role by value' })
-	@ApiResponse({ status: 200, type: Role })
+	@ApiResponse({ status: 200 })
 	@Get('/:value')
 	async getByValue(@Param('value') value: string) {
 		return await this.roleSerive.getRoleByValue(value);

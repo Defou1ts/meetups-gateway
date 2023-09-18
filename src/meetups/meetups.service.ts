@@ -3,7 +3,6 @@ import { ClientProxy } from '@nestjs/microservices';
 import { MICROSERVICES_TYPES } from 'src/services.types';
 import { firstValueFrom } from 'rxjs';
 
-import type { User } from 'src/users/models/users.model';
 import type { SignUserToMeetupDto } from './dto/sign-user-to-meetup.dto';
 import type { AddTagDto } from './dto/add-tag.dto';
 import type { UpdateMeetupDto } from './dto/update-meetup.dto';
@@ -51,7 +50,7 @@ export class MeetupsService {
 		return await firstValueFrom(this.meetupsMicroserviceClient.send('meetups/addTag', dto));
 	}
 
-	async sign(user: User, dto: SignUserToMeetupDto) {
+	async sign(user: any, dto: SignUserToMeetupDto) {
 		return await firstValueFrom(this.meetupsMicroserviceClient.send('meetups/sign', { user, dto }));
 	}
 }
