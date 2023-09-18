@@ -12,6 +12,8 @@ import { appConfigRegister } from './config/app.config';
 import { rabbitmqConfigRegister } from './config/rabbitmq.config';
 import { MICROSERVICES_TYPES } from './services.types';
 import { getClientsModuleRabbitMqProvider } from './helpers/getClientsModuleRabbitMqConnection';
+import { OauthModule } from './oauth/oauth.module';
+import { googleConfigRegister } from './config/google.config';
 
 @Module({
 	imports: [
@@ -25,13 +27,14 @@ import { getClientsModuleRabbitMqProvider } from './helpers/getClientsModuleRabb
 
 		ConfigModule.forRoot({
 			isGlobal: true,
-			load: [jwtConfigRegister, appConfigRegister, rabbitmqConfigRegister],
+			load: [jwtConfigRegister, appConfigRegister, rabbitmqConfigRegister, googleConfigRegister],
 		}),
 		UsersModule,
 		RolesModule,
 		JwtAuthModule,
 		MeetupsModule,
 		TagsModule,
+		OauthModule,
 	],
 })
 export class AppModule {}
