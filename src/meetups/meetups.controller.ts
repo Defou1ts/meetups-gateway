@@ -38,8 +38,10 @@ export class MeetupsController {
 		@Query('take') take: number,
 		@Query('skip') skip: number,
 		@Query('sort_by') sortBy: MeetupQueryValueType,
+		@Query('latitude') latitude: number,
+		@Query('longitude') longitude: number,
 	) {
-		return await this.meetupsService.getAllMeetups(name, take, skip, sortBy);
+		return await this.meetupsService.getAllMeetups(name, take, skip, sortBy, latitude, longitude);
 	}
 
 	@ApiOperation({ summary: 'Get meetup by id' })

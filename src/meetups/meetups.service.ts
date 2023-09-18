@@ -24,9 +24,11 @@ export class MeetupsService {
 		take: number = 10,
 		skip: number = 0,
 		sortBy: MeetupQueryValueType = 'ascending',
+		latitude?: number,
+		longitude?: number,
 	) {
 		return await firstValueFrom(
-			this.meetupsMicroserviceClient.send('meetups/getAll', { name, take, skip, sortBy }),
+			this.meetupsMicroserviceClient.send('meetups/getAll', { name, take, skip, sortBy, latitude, longitude }),
 		);
 	}
 
