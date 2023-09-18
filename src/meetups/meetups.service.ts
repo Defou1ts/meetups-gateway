@@ -16,6 +16,10 @@ export class MeetupsService {
 		@Inject(MICROSERVICES_TYPES.MEETUPS_MICROSERVICE) private readonly meetupsMicroserviceClient: ClientProxy,
 	) {}
 
+	async searchMeetupsByName(name: string) {
+		return await firstValueFrom(this.meetupsMicroserviceClient.send('meetups/searchByName', { name }));
+	}
+
 	async getAllMeetups(
 		name: string | undefined,
 		take: number = 10,

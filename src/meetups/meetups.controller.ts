@@ -25,6 +25,15 @@ export class MeetupsController {
 	@ApiResponse({ status: 200, type: [Meetup] })
 	@ApiHeader(jwtSwaggerAuthApiHeader)
 	@UseGuards(JwtAuthenticationGuard)
+	@Get('search')
+	async searchByName(@Query('name') name: string = '') {
+		return await this.meetupsService.searchMeetupsByName(name);
+	}
+
+	@ApiOperation({ summary: 'Get all meetups' })
+	@ApiResponse({ status: 200, type: [Meetup] })
+	@ApiHeader(jwtSwaggerAuthApiHeader)
+	@UseGuards(JwtAuthenticationGuard)
 	@Get()
 	async getAll(
 		@Query('name') name: string,
