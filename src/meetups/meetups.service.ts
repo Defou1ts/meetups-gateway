@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { MICROSERVICES_TYPES } from 'src/services.types';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 
 import type { SignUserToMeetupDto } from './dto/sign-user-to-meetup.dto';
 import type { AddTagDto } from './dto/add-tag.dto';
@@ -54,5 +54,11 @@ export class MeetupsService {
 
 	async sign(user: any, dto: SignUserToMeetupDto) {
 		return await firstValueFrom(this.meetupsMicroserviceClient.send('meetups/sign', { user, dto }));
+	}
+
+	async getMeetupsPdfFile() {
+		return this.meetupsMicroserviceClient
+			.send<Buffer>('meetups/pdf', {})
+			.pipe(map((bufferObj) => Buffer.from(bufferObj)));
 	}
 }

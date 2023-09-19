@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { UserParam } from 'src/users/decorators/user.decorator';
 import { JwtAuthenticationGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UserRoles } from 'src/users/constants/user-roles';
@@ -6,6 +6,7 @@ import { RequiredRole } from 'src/users/decorators/roles-auth.decorator';
 import { RolesGuard } from 'src/users/guards/roles-guard';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { jwtSwaggerAuthApiHeader } from 'src/auth/constants/jwt-swagger-auth-header';
+import { Response } from 'express';
 
 import { MeetupQueryValueType } from './constants/sorts';
 import { SignUserToMeetupDto } from './dto/sign-user-to-meetup.dto';
@@ -48,7 +49,7 @@ export class MeetupsController {
 	@ApiResponse({ status: 200 })
 	@ApiHeader(jwtSwaggerAuthApiHeader)
 	@UseGuards(JwtAuthenticationGuard)
-	@Get(':id')
+	@Get('byId/:id')
 	async getById(@Param('id', new ParseIntPipe()) id: number) {
 		return await this.meetupsService.getMeetupById(id);
 	}
@@ -104,5 +105,27 @@ export class MeetupsController {
 	@Patch('sign')
 	async sign(@UserParam() user: any, @Body() dto: SignUserToMeetupDto) {
 		return await this.meetupsService.sign(user, dto);
+	}
+
+	@ApiOperation({ summary: 'Get meetups pdf' })
+	@ApiResponse({ status: 200 })
+	@ApiHeader(jwtSwaggerAuthApiHeader)
+	@UseGuards(JwtAuthenticationGuard)
+	@Get('pdf')
+	async getPdf(@Res() res: Response) {
+		const pdfObservable = await this.meetupsService.getMeetupsPdfFile();
+
+		pdfObservable.subscribe((bufferObj) => {
+			const buffer = Buffer.from(bufferObj);
+			console.log(buffer);
+
+			res.set({
+				'Content-Type': 'application/pdf',
+				'Content-Disposition': 'attachment; filename=example.pdf',
+				'Content-Length': buffer.length,
+			});
+
+			res.end(buffer);
+		});
 	}
 }
