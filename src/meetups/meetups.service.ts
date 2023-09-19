@@ -61,4 +61,8 @@ export class MeetupsService {
 			.send<Buffer>('meetups/pdf', {})
 			.pipe(map((bufferObj) => Buffer.from(bufferObj)));
 	}
+
+	async getMeetupsCsvFile() {
+		return await firstValueFrom(this.meetupsMicroserviceClient.send<string>('meetups/csv', {}));
+	}
 }

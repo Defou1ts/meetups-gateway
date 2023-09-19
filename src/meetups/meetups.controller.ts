@@ -1,4 +1,17 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Res, UseGuards } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Delete,
+	Get,
+	Header,
+	Param,
+	ParseIntPipe,
+	Patch,
+	Post,
+	Query,
+	Res,
+	UseGuards,
+} from '@nestjs/common';
 import { UserParam } from 'src/users/decorators/user.decorator';
 import { JwtAuthenticationGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UserRoles } from 'src/users/constants/user-roles';
@@ -117,7 +130,6 @@ export class MeetupsController {
 
 		pdfObservable.subscribe((bufferObj) => {
 			const buffer = Buffer.from(bufferObj);
-			console.log(buffer);
 
 			res.set({
 				'Content-Type': 'application/pdf',
@@ -127,5 +139,18 @@ export class MeetupsController {
 
 			res.end(buffer);
 		});
+	}
+
+	@Header('Content-Type', 'text/csv')
+	@Header('Content-Disposition', 'attachment; filename=data.csv')
+	@ApiOperation({ summary: 'Get meetups csv' })
+	@ApiResponse({ status: 200 })
+	@ApiHeader(jwtSwaggerAuthApiHeader)
+	@UseGuards(JwtAuthenticationGuard)
+	@Get('csv')
+	async getCsv() {
+		const csvString = await this.meetupsService.getMeetupsCsvFile();
+		console.log(csvString);
+		return csvString;
 	}
 }
