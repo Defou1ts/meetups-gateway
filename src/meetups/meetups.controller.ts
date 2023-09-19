@@ -150,7 +150,6 @@ export class MeetupsController {
 	@Get('csv')
 	async getCsv() {
 		const csvString = await this.meetupsService.getMeetupsCsvFile();
-		console.log(csvString);
 		return csvString;
 	}
 }
